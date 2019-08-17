@@ -10,7 +10,7 @@ class Camera {
 private:
     // for movements
     float cameraSpd = 2.5f;
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f,  3.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f,  0.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f,  0.0f);
 
     // for rotations (pitch/yaw/roll)
@@ -41,6 +41,8 @@ public:
     // for view matrix transformation
     void setUniformTransform();
     void setTransform();
+
+    void setPos(glm::vec3 _position);
 
     // for input
     void processInput(GLFWwindow* window, float deltaTime, bool mouseDisabled, double xpos, double ypos);

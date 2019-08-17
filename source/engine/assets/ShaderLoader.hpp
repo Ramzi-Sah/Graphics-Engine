@@ -23,8 +23,8 @@ public:
 
     static void createShaderProgram(std::string shaderProgramName, std::string shaderFolder);
 
-    static std::map<std::string, unsigned int> shaderPrograms;
     static unsigned int getShader(std::string shaderProgramName);
+    static std::map<std::string, unsigned int> shaderPrograms;
 
 
 };

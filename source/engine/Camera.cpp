@@ -47,6 +47,13 @@ void Camera::setTransform() {
     setUniformTransform();
 }
 
+void Camera::setPos(glm::vec3 _position) {
+    cameraPos = _position;
+
+    // set cam transforms
+    setTransform();
+};
+
 /*----------------------------------------------------------------------------------*/
 void Camera::processInput(GLFWwindow* window, float deltaTime, bool mouseDisabled, double xpos, double ypos) {
     // for rotation calculations
@@ -62,7 +69,7 @@ void Camera::processInput(GLFWwindow* window, float deltaTime, bool mouseDisable
         yaw += xoffset;
         pitch += yoffset;
 
-        // block cazmera on too height pitch
+        // block camera on too Height/Low pitch
         if(pitch > 89.0f)
             pitch = 89.0f;
         if(pitch < -89.0f)

@@ -5,13 +5,13 @@
 
 struct Vertex {
     glm::vec3 position;
-    glm::vec4 color;
     glm::vec2 uv;
+    glm::vec3 normal;
 
-    Vertex(glm::vec3 _position, glm::vec4 _color, glm::vec2 _uv) {
+    Vertex(glm::vec3 _position, glm::vec2 _uv, glm::vec3 _normal) {
         position = _position;
-        color = _color;
         uv = _uv;
+        normal = _normal;
     }
 };
 
