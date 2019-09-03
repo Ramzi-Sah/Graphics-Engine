@@ -1,12 +1,17 @@
 #include "Model.hpp"
 
 Model::Model() {
-
+    // init transform matricies
+    reSetTransform();
 }
 
-void Model::addVertex(glm::vec3 position, glm::vec2 uv, glm::vec3 normal) {
+Model::~Model() {
+    meshGroupsFlush();
+};
+
+void Model::addVertex(glm::vec3 position, glm::vec2 uv, glm::vec3 normal, glm::vec3 color) {
     // create new Vertex object
-    Vertex v(position, uv, normal);
+    Vertex v(position, uv, normal, color);
 
     // add vertex to model vertices
     m_vertices.push_back(v);
@@ -28,7 +33,7 @@ void Model::loadVertices(unsigned int _indecies[], unsigned int _numberIndecies,
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
 
     // get model size Bytes for monitoring
-    m_modelSize = sizeof(Vertex) * m_vertices.size();
+    m_modelSize += sizeof(Vertex) * m_vertices.size();
 
     // handle data Vertex attribs
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)0); // set position vertex attrib
@@ -39,6 +44,9 @@ void Model::loadVertices(unsigned int _indecies[], unsigned int _numberIndecies,
 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)(sizeof(float)*5)); // set normal vertex attrib
     glEnableVertexAttribArray(2);
+
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)(sizeof(float)*8)); // set color vertex attrib
+    glEnableVertexAttribArray(3);
 
     // create Eelement Buffer object
     unsigned int EBO;
@@ -63,6 +71,25 @@ void Model::loadVertices(unsigned int _indecies[], unsigned int _numberIndecies,
 
     // pop all vertecies
     m_vertices.clear();
+}
+
+void Model::meshGroupsFlush() {
+    // FIXME: need to delete vaos data & vbos
+    // for (int i = 0; i < meshGroups.size(); i++) {
+    //     GLint nAttr = 0;
+    //     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nAttr);
+    //     glBindVertexArray(meshGroups[i].VAO);
+    //     for (int iAttr = 0; iAttr < nAttr; ++iAttr) {
+    //         GLint vboId = 0;
+    //         glGetVertexAttribiv(iAttr, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &vboId);
+    //         if (vboId > 0) {
+    //             std::cout << "deleating: vbo " << vboId << std::endl;
+    //             glDeleteBuffers(1, &vboId);
+    //         }
+    //     }
+    // }
+    //
+    meshGroups.clear();
 }
 
 /*--------------------------------------------------------------------*/
@@ -136,48 +163,73 @@ void Model::setUniformTransform() {
     glUniformMatrix4fv(modelMatLoc, 1, GL_FALSE, glm::value_ptr(m_model));
 }
 
-void Model::setTransform(glm::vec3 _position, glm::vec3 _size) {
+void Model::reSetTransform() {
     // reset transform matrices to 1.0f
-    m_model = glm::mat4(1.0f);
+    m_rotationMat = glm::mat4(1.0f);
+    m_scaleMat = glm::mat4(1.0f);
+    m_positionMat = glm::mat4(1.0f);
 
     // set transform
-    m_model = glm::rotate(m_model, glm::radians(0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-    m_model = glm::scale(m_model, _size);
-    m_model = glm::translate(m_model, _position);
+    m_rotationMat = glm::rotate(m_rotationMat, glm::radians(0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    m_scaleMat = glm::scale(m_scaleMat, glm::vec3(1.0f, 1.0f, 1.0f));
+    m_positionMat = glm::translate(m_positionMat, glm::vec3(0.0f, 0.0f, 0.0f));
+
+    // calculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
 
     // set transform uniform for shader
     setUniformTransform();
 }
 
-// FIXME: resets m_model matrix
-void Model::setPos(glm::vec3 _position) {
-    m_model = glm::mat4(1.0f);
-
-    // set position
-    m_model = glm::translate(m_model, _position);
-
-    // set transform uniform for shader
-    setUniformTransform();
-};
-
-// FIXME: resets m_model matrix
-void Model::setRot(float rotation, glm::vec3 axes) {
-    m_model = glm::mat4(1.0f);
+void Model::setRotation(float rotationDeg, glm::vec3 axes) {
+    // reset rotation mat
+    m_rotationMat = glm::mat4(1.0f);
 
     // set rotaion
-    m_model = glm::rotate(m_model, glm::radians(rotation), axes);
+    m_rotationMat = glm::rotate(m_rotationMat, glm::radians(rotationDeg), glm::normalize(axes));
 
-    // set transform uniform for shader
-    setUniformTransform();
+    // recalculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
 };
 
-// FIXME: resets m_model matrix
+void Model::setRotation(glm::quat quaternion) {
+    // set rotaion
+    m_rotationMat = glm::toMat4(quaternion);
+
+    // recalculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
+};
+
+void Model::setLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up) {
+    // set rotaion
+    m_rotationMat = glm::lookAt(pos, target, up); // position, target and up vector
+
+    // recalculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
+};
+
 void Model::setScale(glm::vec3 _size) {
-    m_model = glm::mat4(1.0f);
+    // reset scale mat
+    m_scaleMat = glm::mat4(1.0f);
 
     // set size
-    m_model = glm::scale(m_model, _size);
+    m_scaleMat = glm::scale(m_scaleMat, _size);
 
-    // set transform uniform for shader
-    setUniformTransform();
+    // recalculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
+};
+
+void Model::setPosition(glm::vec3 _position) {
+    // reset scale mat
+    m_positionMat = glm::mat4(1.0f);
+
+    // set position
+    m_positionMat = glm::translate(m_positionMat, _position);
+
+    // recalculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
+};
+
+void Model::setPosition(float _x, float _y, float _z) {
+    setPosition(glm::vec3(_x, _y, _z));
 };

@@ -27,12 +27,16 @@ private:
     std::vector<MeshGroup> meshGroups;
 
     // transforms
-    glm::mat4 m_model = glm::mat4(1.0f);
     void setUniformTransform();
+    glm::mat4 m_model = glm::mat4(1.0f);
+    glm::mat4 m_rotationMat = glm::mat4(1.0f);
+    glm::mat4 m_scaleMat = glm::mat4(1.0f);
+    glm::mat4 m_positionMat = glm::mat4(1.0f);
+
 
     // mesh
     std::vector<Vertex> m_vertices;
-    unsigned int m_modelSize;
+    unsigned int m_modelSize = 0;
 
     // material
     void setUniformMaterial(Material _material);
@@ -43,17 +47,21 @@ private:
 
 public:
     Model();
-    ~Model() {};
+    ~Model();
 
     // for model matrix transformation
-    void setTransform(glm::vec3 position, glm::vec3 size);
-    void setPos(glm::vec3 position); // FIXME: resets m_model matrix
-    void setRot(float rotation, glm::vec3 axes); // FIXME: resets m_model matrix
-    void setScale(glm::vec3 size); // FIXME: resets m_model matrix
+    void reSetTransform();
+    void setPosition(glm::vec3 position);
+    void setPosition(float _x, float _y, float _z);
+    void setRotation(float rotationDeg, glm::vec3 axes);
+    void setRotation(glm::quat quaternion);
+    void setLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up);
+    void setScale(glm::vec3 size);
 
     // for mesh
-    void addVertex(glm::vec3 position, glm::vec2 uv, glm::vec3 normal);
+    void addVertex(glm::vec3 position, glm::vec2 uv, glm::vec3 normal, glm::vec3 color);
     void loadVertices(unsigned int _indecies[], unsigned int _numberIndecies, Material _material);
+    void meshGroupsFlush();
     std::string getSize();
 
     // for material

@@ -20,14 +20,16 @@ unsigned int TextureLoader::createTexture(std::string textureName, std::string f
     unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
     if (!data) {
         std::cout << "Warning: Failed to load texture \"" << filePath << "\"." << std::endl;
-        stbi_image_free(data);
     } else {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
         m_textures[textureName] = texture;
-        stbi_image_free(data);
-        return texture;
     }
+
+    stbi_image_free(data);
+    return texture;
 };
 
 unsigned int TextureLoader::getTexture(std::string textureName) {

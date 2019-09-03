@@ -24,7 +24,8 @@ public:
     void setDisableMouse();
 
     // for input
-    bool scapeKeyPressed = true;
+    bool scapeKeyPressed = false;
+    bool V_KeyPressed = false;
     void processInput();
 
     static bool mouseDisabled;

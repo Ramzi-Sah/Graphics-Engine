@@ -1,0 +1,3 @@
+# exclude libs from github language detection
+
+source/include/* text diff=c

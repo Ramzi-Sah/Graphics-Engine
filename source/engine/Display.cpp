@@ -1,6 +1,16 @@
 #include "Display.hpp"
 
 Display::Display(const char* title, unsigned int width, unsigned int height) {
+    // init glfw
+    if (!glfwInit()) {
+        std::cout << "ERROR: glfw init failed." << std::endl;
+    }
+
+    // setting some glfw attribs
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     // GLFWwindow is a struct containing window attribs
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!window) {
@@ -43,6 +53,14 @@ void Display::processInput() {
         setDisableMouse();
     }
 
+    // handle escape key for mouse disable/enable
+    if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
+        V_KeyPressed = true;
+    } else if (V_KeyPressed && glfwGetKey(window, GLFW_KEY_V) == GLFW_RELEASE) {
+        V_KeyPressed = false;
+        Camera::basculateView();
+    }
+
 }
 /* ---------- event functions ---------- */
 // handle error events
@@ -71,4 +89,5 @@ double Display::mouseYPos;
 void Display::mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     mouseXPos = xpos;
     mouseYPos = ypos;
+    // std::cout << "xpos: " << mouseXPos << " | ypos: " << ypos << '\n';
 };
