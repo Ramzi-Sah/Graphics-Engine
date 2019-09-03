@@ -4,7 +4,7 @@ Compiler_Linux=g++
 LIBRARRYS=-lGL -ldl -lglfw
 
 compile_execute:
-	$(Compiler_Linux) source/*.cpp source/*/*.cpp source/*/*/*.cpp source/*/*/*/*.cpp source/include/*.c -o build/$(FinalBinary) $(LIBRARRYS)
+	$(Compiler_Linux) source/*.cpp source/*/*.cpp source/*/*/*.cpp source/*/*/*/*.cpp source/dependencies/*.c -o build/$(FinalBinary) $(LIBRARRYS)
 	build/$(FinalBinary)
 
 compile:

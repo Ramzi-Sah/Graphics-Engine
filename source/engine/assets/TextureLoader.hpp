@@ -4,9 +4,9 @@
 #include <iostream>
 #include <map>
 
-#include "../../include/glad.h"
+#include "../../dependencies/glad.h"
 #include <GLFW/glfw3.h>
-#include "../../include/stb_image.h"
+#include "../../dependencies/stb_image.h"
 
 
 class TextureLoader {

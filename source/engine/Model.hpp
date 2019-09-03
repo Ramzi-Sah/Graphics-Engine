@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../include/glad.h"
+#include "../dependencies/glad.h"
 #include <GLFW/glfw3.h>
 
 #include "../common/Vectors.hpp"

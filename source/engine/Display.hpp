@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "../include/glad.h"
+#include "../dependencies/glad.h"
 #include <GLFW/glfw3.h>
 
 #include "Camera.hpp"

@@ -1,3 +1,0 @@
-# exclude libs from github language detection
-
-source/include/* linguist-vendored
