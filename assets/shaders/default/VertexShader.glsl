@@ -36,7 +36,7 @@ void main() {
     v_ambientLight = ambientLight;
 
     // calculate deffuse light
-    float diffuse_diff = max(dot(normalize(v_normal), normalize(lightDir)), 0.0f);
+    float diffuse_diff = max(dot(normalize(v_normal), normalize(lightDir)), 0.0f) + max(dot(normalize(v_normal), -normalize(lightDir)), 0.0f) / 4;
     v_diffuseLight = vec3(diffuse_diff * lightColor);
 
     gl_Position = projection * view * model * vec4(in_position, 1.0f);

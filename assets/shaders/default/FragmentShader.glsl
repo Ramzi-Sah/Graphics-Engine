@@ -16,7 +16,7 @@ void main() {
     vec4 light = vec4(v_ambientLight + v_diffuseLight, 1.0f);
 
     // calculate color
-    vec4 color = (texture(texture0, v_uv) * v_defuse) * vec4(v_color, 1.0f);
+    vec4 color = texture(texture0, v_uv) * v_defuse * vec4(v_color, 1.0f);
 
     // final color
     out_color = light * color;

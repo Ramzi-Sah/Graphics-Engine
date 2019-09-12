@@ -47,7 +47,8 @@ void ModelLoader::createModel(std::string modelName, std::string modelPath) {
                 // create texture map
                 unsigned int textureMap = TextureLoader::createTexture(
                     selectedMaterialName,
-                    "assets/models/" + modelName + defiseMapFilePath
+                    "assets/models/" + modelName + defiseMapFilePath,
+                    false
                 );
 
                 // set defuse map
@@ -223,7 +224,7 @@ void ModelLoader::createModel(std::string modelName, std::string modelPath) {
 
         // get mesh group indecies
         unsigned int indecies[nbrIndecies];
-        for (int k = 0; k < nbrIndecies; k++) {
+        for (unsigned int k = 0; k < nbrIndecies; k++) {
             indecies[k] = k;
         };
 

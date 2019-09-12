@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 
-#include "../../dependencies/glad.h"
+#include <glad.h>
 #include <GLFW/glfw3.h>
 
 #include "../../common/Vectors.hpp"

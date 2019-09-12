@@ -1,13 +1,23 @@
+/*
+    File: Display.hpp
+    Author: Ramzi Sah
+
+    Description:
+        handle display window
+*/
+
 #ifndef SAH_DISPLAY
 #define SAH_DISPLAY
 
 #include <iostream>
 
-#include "../dependencies/glad.h"
+#include <glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Camera.hpp"
 #include "assets/AssetLoader.hpp"
+#include "../logic/entities/Entities.hpp"
+#include "GUI/GUI.hpp"
 
 class Display {
 private:
@@ -16,25 +26,30 @@ private:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+    // for input
+    static bool scapeKeyPressed;
+    static bool V_KeyPressed;
+    static bool MouseLeftBtn_KeyPressed;
 
 public:
     Display(const char* title, unsigned int width, unsigned int height);
     ~Display() {};
 
-    void setDisableMouse();
+    static void setDisableMouse();
 
-    // for input
-    bool scapeKeyPressed = false;
-    bool V_KeyPressed = false;
-    void processInput();
+    // size getters
+    static unsigned int window_width;
+    static unsigned int window_height;
+    unsigned int getWindowWidth();
+    unsigned int getWindowHeight();
 
     static bool mouseDisabled;
     static double mouseXPos;
     static double mouseYPos;
 
-    GLFWwindow* window;
-
-
+    static GLFWwindow* window;
 };
 
 #endif

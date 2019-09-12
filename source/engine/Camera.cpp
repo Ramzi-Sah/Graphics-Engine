@@ -1,8 +1,11 @@
 #include "Camera.hpp"
 
-Camera::Camera(float width, float height) {
+Camera::Camera() {
     // set perspective mat uniform
-    Camera::setPerspectiveMat((float)width/(float)height);
+    setPerspectiveMat(m_resolution);
+
+    // init to a rotation
+    attachToRot(true, m_yaw, m_ypos);
 
     // set cam transforms
     setTransform();
@@ -16,9 +19,14 @@ float Camera::FOV = 60.0f;
 float Camera::minDistView = 0.1f;
 float Camera::maxDistView = 300.0f;
 
+float Camera::m_resolution = 1.0f;
 glm::mat4 Camera::m_projection;
 
 void Camera::setPerspectiveMat(float resolution) {
+    // reset camera resolution
+    m_resolution = resolution;
+
+    // set perspective matrix
     m_projection = glm::perspective((float)glm::radians(FOV), resolution, minDistView, maxDistView);
 
     // set all shader program's projection uniform
@@ -53,30 +61,10 @@ void Camera::setPos(glm::vec3 _position) {
     setTransform();
 };
 
-void Camera::attach(glm::vec3 _position, float deltaTime, float yaw, bool mouseDisabled, double ypos) {
-    // for rotation calculations
-    float xoffset = lastX - ypos;
-    lastX = ypos;
-
-    // check for mouse state
-    if (!mouseDisabled) {
-        xoffset *= sensitivity * deltaTime;
-
-        pitch += xoffset;
-
-        if (pitch >= 89.0f)
-            pitch = 89.0f;
-        if (pitch <= -89.0f)
-            pitch = -89.0f;
-    }
-
+void Camera::attachToPos(glm::vec3 _position, float deltaTime) {
     // switch cam view state
     switch (camView) {
         case firstPerson:
-            // convert yaw to pos
-            cameraOffset.x = cameraRadius * sin(glm::radians(yaw));
-            cameraOffset.z = cameraRadius * cos(glm::radians(yaw));
-
             // calculate camera pos
             cameraPos = _position;
             cameraPos.y += cameraHight;
@@ -93,10 +81,6 @@ void Camera::attach(glm::vec3 _position, float deltaTime, float yaw, bool mouseD
             break;
 
         case thirdPerson:
-            // convert yaw to pos
-            cameraOffset.x = cameraRadius * sin(glm::radians(yaw));
-            cameraOffset.z = cameraRadius * cos(glm::radians(yaw));
-
             cameraPos = _position + cameraOffset;
             cameraTarget = _position + cameraTargetOffset;
 
@@ -119,6 +103,29 @@ void Camera::attach(glm::vec3 _position, float deltaTime, float yaw, bool mouseD
     setTransform();
 };
 
+void Camera::attachToRot(bool mouseDisabled, float yaw, double ypos) {
+    // for rotation calculations
+    float yoffset = lastY - ypos;
+    lastY = ypos;
+    m_yaw = yaw;
+
+    // check for mouse state
+    if (!mouseDisabled) {
+        yoffset *= sensitivity;
+
+        pitch += yoffset;
+
+        if (pitch >= 89.0f)
+            pitch = 89.0f;
+        if (pitch <= -89.0f)
+            pitch = -89.0f;
+    }
+
+    // convert yaw to pos
+    cameraOffset.x = cameraRadius * sin(glm::radians(yaw));
+    cameraOffset.z = cameraRadius * cos(glm::radians(yaw));
+};
+
 glm::vec3 Camera::getPos() {
     return cameraPos;
 };
@@ -129,4 +136,7 @@ void Camera::basculateView() {
     if (camView >= 3) {
         camView = 0;
     }
+};
+int Camera::getCamVew() {
+    return Camera::camView;
 };

@@ -4,9 +4,9 @@
 #include <iostream>
 #include <map>
 
-#include "../../dependencies/glad.h"
+#include <glad.h>
 #include <GLFW/glfw3.h>
-#include "../../dependencies/stb_image.h"
+#include <stb_image.h>
 
 
 class TextureLoader {
@@ -17,9 +17,8 @@ public:
     TextureLoader() {};
     ~TextureLoader() {};
 
-    static unsigned int createTexture(std::string textureName, std::string filePath);
+    static unsigned int createTexture(std::string textureName, std::string filePath, bool AlphaChanel);
     static unsigned int getTexture(std::string textureName);
-    static void deleteTextures();
 
 };
 

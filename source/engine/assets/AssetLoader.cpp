@@ -5,7 +5,7 @@ void AssetLoader::createShaderPrograms() {
 }
 
 void AssetLoader::createTextures() {
-    TextureLoader::createTexture("Default", "assets/textures/default.jpg");
+    TextureLoader::createTexture("Default", "assets/textures/default.jpg", false);
 }
 
 void AssetLoader::createModels() {

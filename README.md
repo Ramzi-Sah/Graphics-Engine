@@ -4,21 +4,24 @@
 
 ## Requirements
 * a c++ compiler
-* glfw https://www.glfw.org/
-* glm https://glm.g-truc.net/
+* a brain
 
 ## Dev Log
 ### DONE
-* simple mvp transformations with matrices
-* simple light system with ambient/defuse light
-* simple obj model loader with multi material capability
-* infinite procedural generated terrain
+* v0.01- mvp transformations with matrices
+* v0.02- light system with ambient/defuse light
+* v0.03- obj model loader with multi material capability
+* v0.04- infinite procedural generated terrain
+* v0.05- GUI system implementation
 
 ### TO DO
-* advanced GUI system
-* quadratic transformation with quenterions
-* shadows calculations
 * networking system
+* physics simulation
+* ray casting
+* handle model animations
+* shadows rendering
+* game content
+* documentation
 * much more ...
 
 ### FIX ME

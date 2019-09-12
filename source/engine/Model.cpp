@@ -18,6 +18,7 @@ void Model::addVertex(glm::vec3 position, glm::vec2 uv, glm::vec3 normal, glm::v
 }
 
 void Model::loadVertices(unsigned int _indecies[], unsigned int _numberIndecies, Material _material) {
+    // instinitiate a mesh group
     MeshGroup meshGroup;
 
     // gen VAO & bind it for use
@@ -187,14 +188,6 @@ void Model::setRotation(float rotationDeg, glm::vec3 axes) {
 
     // set rotaion
     m_rotationMat = glm::rotate(m_rotationMat, glm::radians(rotationDeg), glm::normalize(axes));
-
-    // recalculate model matrix
-    m_model = m_positionMat * m_rotationMat * m_scaleMat;
-};
-
-void Model::setRotation(glm::quat quaternion) {
-    // set rotaion
-    m_rotationMat = glm::toMat4(quaternion);
 
     // recalculate model matrix
     m_model = m_positionMat * m_rotationMat * m_scaleMat;

@@ -100,5 +100,16 @@ unsigned int ShaderLoader::compileShader(std::string shaderProgramName, unsigned
 };
 
 unsigned int ShaderLoader::getShader(std::string shaderProgramName) {
-    return shaderPrograms[shaderProgramName];
+    // define shader value
+    unsigned int shader;
+
+    // check if shaderProgramName exists
+    if (shaderPrograms.find(shaderProgramName) == shaderPrograms.end()) {
+        std::cout << "shader " << shaderProgramName << " dosen't exist." << '\n';
+        shader = shaderPrograms["Default"];
+    } else {
+        shader = shaderPrograms[shaderProgramName];
+    }
+
+    return shader;
 };

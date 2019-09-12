@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../dependencies/glad.h"
+#include <glad.h>
 #include <GLFW/glfw3.h>
 
 #include "../common/Vectors.hpp"
@@ -54,7 +54,6 @@ public:
     void setPosition(glm::vec3 position);
     void setPosition(float _x, float _y, float _z);
     void setRotation(float rotationDeg, glm::vec3 axes);
-    void setRotation(glm::quat quaternion);
     void setLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up);
     void setScale(glm::vec3 size);
 

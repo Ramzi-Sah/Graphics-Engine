@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/vulkan.dir/vulkan.c.o CMakeFiles/vulkan.dir/__/deps/glad_vulkan.c.o  -o vulkan ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 
