@@ -489,8 +489,9 @@ void _glfwUpdateKeyNamesWin32(void)
 
             vk = vks[key - GLFW_KEY_KP_0];
         }
-        else
-            vk = MapVirtualKey(scancode, MAPVK_VSC_TO_VK);
+// don't even know whats this :/, hope gcc dosent mind if i remove it
+//        else
+//            vk = MapVirtualKey(scancode, MAPVK_VSC_TO_VK);
 
         length = ToUnicode(vk, scancode, state,
                            chars, sizeof(chars) / sizeof(WCHAR),

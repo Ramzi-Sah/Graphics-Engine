@@ -6,10 +6,6 @@
         main program entry point
 */
 
-#include <iostream>
-#include <math.h>
-#include <random>
-
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "engine/Display.hpp"
@@ -25,12 +21,14 @@ float currentFrame;
 
 int main(int argc, char** argv) {
     // create display
-    Display display("SAH Game Engine", width, height);
+    Display display("SAHEB Game Engine", width, height);
 
     // import assets
+    float assetLoadTime = glfwGetTime();
     AssetLoader::createShaderPrograms();
     AssetLoader::createTextures();
     AssetLoader::createModels();
+    std::cout << "load assets took: "<< (glfwGetTime() - assetLoadTime) * 1000 << " ms" << '\n';
 
     // init SceanHandler
     SceanHandler::init(&display);

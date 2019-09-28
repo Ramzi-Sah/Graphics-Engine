@@ -48,7 +48,7 @@ Display::Display(const char* title, unsigned int width, unsigned int height) {
     // openGL render configs
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_POINT, GL_LINE, GL_FILL
     glEnable(GL_DEPTH_TEST); // enable depth test
-    // glEnable(GL_CULL_FACE); // enable face culling
+    glEnable(GL_CULL_FACE); // enable face culling
     glFrontFace(GL_CW); // set face culling to clock wise
     glEnable(GL_BLEND); // enable blending for transparency
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // set blending function
@@ -60,7 +60,7 @@ Display::Display(const char* title, unsigned int width, unsigned int height) {
     setDisableMouse();
 }
 
-bool Display::mouseDisabled = false;
+bool Display::mouseDisabled = true;
 void Display::setDisableMouse() {
     mouseDisabled = !mouseDisabled;
     if (mouseDisabled)
@@ -128,7 +128,7 @@ void Display::framebuffer_size_callback(GLFWwindow* window, int width, int heigh
     glViewport(0, 0, window_width, window_height);
 
     // reset camera perspective
-    Camera::setPerspectiveMat((float)window_width / (float)window_height);
+    Camera::setPerspectiveMat(window_width, window_height);
 
     // handle GUI window size
     GUI::setMouseWindowSize(window_width, window_height);
@@ -142,12 +142,13 @@ void Display::mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     mouseYPos = ypos;
 
     // handle entities mouse input event
-    Entities::MouseEventInput(mouseDisabled, xpos, ypos);
+    Entities::MouseEventInput(mouseDisabled, mouseXPos, mouseYPos);
 
     // std::cout << "xpos: " << mouseXPos << " | ypos: " << ypos << '\n';
 };
 
 // handle mouse left button key ingame click
 void Display::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-
+    // handle entities mouse click input event
+    Entities::MouseClickEventInput(mouseDisabled, button, action, mouseXPos, mouseYPos);
 }

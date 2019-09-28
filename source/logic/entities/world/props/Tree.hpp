@@ -6,7 +6,8 @@
 class Tree : public Props {
 public:
     Tree() {
-        m_model = ModelLoader::getModel("tree");
+        type = "tree";
+        m_model = ModelLoader::getModel(type);
     };
 };
 

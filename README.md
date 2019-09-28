@@ -8,18 +8,18 @@
 
 ## Dev Log
 ### DONE
-* v0.01- mvp transformations with matrices
-* v0.02- light system with ambient/defuse light
-* v0.03- obj model loader with multi material capability
-* v0.04- infinite procedural generated terrain
-* v0.05- GUI system implementation
+* v0.00- window management with openlGL context
+* v0.01- light system with ambient/defuse light
+* v0.02- obj model loader with multi material capability
+* v0.03- GUI system implementation
+* v0.04- ray casting & object placing
+* v0.05- terrain generation from bi-cubic interpolated Height map with multi-Texturing ability
 
 ### TO DO
-* networking system
-* physics simulation
-* ray casting
-* handle model animations
 * shadows rendering
+* physics simulation
+* networking system
+* handle model animations
 * game content
 * documentation
 * much more ...

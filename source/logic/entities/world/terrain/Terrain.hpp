@@ -15,12 +15,16 @@ private:
     TerrainChunk terrainChunks[nbrTerrainChunks][nbrTerrainChunks];
 
     // for terrain update
-    int terrainPosX = 0, terrainPosZ = 0;
+    int terrainPosX, terrainPosZ;
     int offset = nbrTerrainChunks / 2;
+
+    // Lod 2
+    void updateLOD2(int _x, int _z);
+    TerrainChunk terrainChunks2[nbrTerrainChunks * 4][nbrTerrainChunks * 4 + nbrTerrainChunks + 1]; // 4 in a square
 
 
 public:
-    Terrain();
+    Terrain(float _x, float _z);
     ~Terrain() {};
 
     void render();

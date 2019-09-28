@@ -6,7 +6,8 @@
 class Axis : public Props {
 public:
     Axis() {
-        m_model = ModelLoader::getModel("axis");
+        type = "axis";
+        m_model = ModelLoader::getModel(type);
     };
 };
 

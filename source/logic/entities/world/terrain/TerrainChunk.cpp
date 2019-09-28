@@ -1,10 +1,24 @@
 #include "TerrainChunk.hpp"
 
-TerrainChunk::TerrainChunk(int x, int z) {
-    // set grid pos
-    m_gridPos = glm::vec2(x * nbrTiles * tileSize, z * nbrTiles * tileSize);
+TerrainChunk::TerrainChunk(int x, int z, float lod) {
+    // set pos
+    m_pos = glm::vec2(x * nbrTiles * tileSize, z * nbrTiles * tileSize);
 
+    // set chunk's lod
+    m_LOD = lod;
+
+    // DEBUG: set polygone mod to GL_LINE
     // m_model.setPolygoneMode(GL_LINE);
+
+    // use terrain shader
+    m_model.setShaderProgram("terrain");
+
+    // DEBUG: random color
+    m_chunkColor = glm::vec3(
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX)
+    );
 
     // generate mesh
     generateMesh();
@@ -17,8 +31,20 @@ void TerrainChunk::generateMesh() {
         for (int z = 0; z < nbrTiles; z++) {
             // generate faces
             generateTile(x, z);
-        }
-    }
+        };
+    };
+
+    // // generate vertecies with lod
+    // for (int x = 0; x < nbrTiles / m_LOD; x++) {
+    //     for (int z = 0; z < nbrTiles / m_LOD; z++) {
+    //         // generate faces
+    //         // generateTile(x, z);
+    //         if (m_LOD == 1)
+    //             generateTile(x, z);
+    //         if (m_LOD == 2)
+    //             generateTile(x + m_LOD * x / 2, z + m_LOD * z / 2);
+    //     };
+    // };
 
     // calculate faces indecies
     unsigned int numberIndecies = pow(nbrTiles, 2) * 3 * 2; // nbr of tiles each tile have 2 triangles each triangle have 3 vertecies
@@ -33,60 +59,75 @@ void TerrainChunk::generateMesh() {
         indecies[i + 5] = j + 2;
 
         j += 4;
-    }
+    };
 
     // load model vertecies
     m_model.loadVertices(indecies, numberIndecies, Material());
 
     // set position of the chunk
-    m_model.setPosition(m_gridPos.x, 0.0f, m_gridPos.y);
+    m_model.setPosition(m_pos.x, 0.0f, m_pos.y);
 };
 
 /*-----------------------------------------------*/
 void TerrainChunk::generateTile(int x, int z) {
-    // set face color vertex attrib
-    glm::vec3 color = Bioms::getColor(x * tileSize + m_gridPos.x, z * tileSize + m_gridPos.y);
-    // color = glm::vec3(
-    //     static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
-    //     static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
-    //     static_cast<float>(rand()) / static_cast<float>(RAND_MAX)
-    // );
+    // DEBUG: chunk color
+    // glm::vec3 color = m_chunkColor;
+
+    // DEBUG: random color
+    glm::vec3 color(
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX)/2 + m_chunkColor.r/2,
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX)/2 + m_chunkColor.g/2,
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX)/2 + m_chunkColor.b/2
+    );
+
+    // DEBUG: white color
+    // glm::vec3 color(1.0f, 1.0f, 1.0f);
 
     // add vertecies to model
     m_model.addVertex(
         getVertexPos(x, z),
         glm::vec2(0.0f, 0.0f),
         getVertexNormal(x, z),
-        color
+        color,
+        Bioms::getGrassValue(x * tileSize + m_pos.x, z * tileSize + m_pos.y)
     );
     m_model.addVertex(
-        getVertexPos(x + 1, z),
+        getVertexPos(x + m_LOD, z),
         glm::vec2(1.0f, 0.0f),
-        getVertexNormal(x + 1, z),
-        color
+        getVertexNormal(x + m_LOD, z),
+        color,
+        Bioms::getGrassValue((x + m_LOD) * tileSize + m_pos.x, z * tileSize + m_pos.y)
     );
     m_model.addVertex(
-        getVertexPos(x, z + 1),
+        getVertexPos(x, z + m_LOD),
         glm::vec2(0.0f, 1.0f),
-        getVertexNormal(x, z + 1),
-        color
+        getVertexNormal(x, z + m_LOD),
+        color,
+        Bioms::getGrassValue(x * tileSize + m_pos.x, (z + m_LOD) * tileSize + m_pos.y)
     );
     m_model.addVertex(
-        getVertexPos(x + 1, z + 1),
+        getVertexPos(x + m_LOD, z + m_LOD),
         glm::vec2(1.0f, 1.0f),
-        getVertexNormal(x + 1, z + 1),
-        color
+        getVertexNormal(x + m_LOD, z + m_LOD),
+        color,
+        Bioms::getGrassValue((x + m_LOD) * tileSize + m_pos.x, (z + m_LOD) * tileSize + m_pos.y)
     );
 
     // create a terrain decoration
-    addProps(x * tileSize + m_gridPos.x, z * tileSize + m_gridPos.y);
-}
+    addProps(x * tileSize + m_pos.x, z * tileSize + m_pos.y);
+};
 
 glm::vec3 TerrainChunk::getVertexPos(int x, int z) {
+    // calculate vertex model pos
+    float posX, posZ;
+    posX = x * tileSize;
+    posZ = z * tileSize;
+
+    // return vertex pos attrib
     return glm::vec3(
-        x * tileSize,
-        Bioms::getHight(x * tileSize + m_gridPos.x, z * tileSize + m_gridPos.y),
-        z * tileSize
+        posX,
+        Bioms::getHight(posX + m_pos.x, posZ + m_pos.y),
+        posZ
     );
 };
 
@@ -94,15 +135,15 @@ glm::vec3 TerrainChunk::getVertexNormal(int x, int z) {
     // get nearby verticies height
     float H_Up, H_Down, H_Right, H_Left;
 
-    H_Up = Bioms::getHight((x + 1) * tileSize + m_gridPos.x, z * tileSize + m_gridPos.y);
-    H_Down = Bioms::getHight((x - 1) * tileSize + m_gridPos.x, z * tileSize + m_gridPos.y);
-    H_Right = Bioms::getHight(x * tileSize + m_gridPos.x, (z + 1) * tileSize + m_gridPos.y);
-    H_Left = Bioms::getHight(x * tileSize + m_gridPos.x, (z - 1) * tileSize + m_gridPos.y);
+    H_Up = Bioms::getHight((x + 1) * tileSize + m_pos.x, z * tileSize + m_pos.y);
+    H_Down = Bioms::getHight((x - 1) * tileSize + m_pos.x, z * tileSize + m_pos.y);
+    H_Right = Bioms::getHight(x * tileSize + m_pos.x, (z + 1) * tileSize + m_pos.y);
+    H_Left = Bioms::getHight(x * tileSize + m_pos.x, (z - 1) * tileSize + m_pos.y);
 
     // calculate & return vertex normal
     return glm::normalize(glm::vec3(
-        H_Left - H_Right,
         H_Down - H_Up,
+        H_Left - H_Right,
         2.0f
     ));
 };
@@ -146,5 +187,5 @@ void TerrainChunk::addProps(float x, float z) {
 
         // push it to trees list
         m_grass.push_back(grass);
-    }
+    };
 };

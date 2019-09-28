@@ -5,9 +5,14 @@
 #   Description:
 #       handles cmake compilation config
 
+# set cmake min version
 cmake_minimum_required(VERSION 3.0.0)
 
-project (SAH_Engine)
+# set c++ compiler min version 
+set(CMAKE_CXX_STANDARD 11)
+
+# project name
+project (SAHEB_Engine)
 
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES
@@ -15,6 +20,7 @@ file(GLOB_RECURSE SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/source/*/*.cpp
     ${CMAKE_SOURCE_DIR}/source/*/*/*.cpp
     ${CMAKE_SOURCE_DIR}/source/*/*/*/*.cpp
+    ${CMAKE_SOURCE_DIR}/source/*/*/*/*/*.cpp
 )
 
 # Add header files
@@ -24,6 +30,7 @@ file(GLOB_RECURSE HEADER_FILES
 	${CMAKE_SOURCE_DIR}/source/*/*.hpp
 	${CMAKE_SOURCE_DIR}/source/*/*/*.hpp
 	${CMAKE_SOURCE_DIR}/source/*/*/*/*.hpp
+	${CMAKE_SOURCE_DIR}/source/*/*/*/*/*.hpp
 )
 
 # set CMAKE_DIR fot lib loading
@@ -65,7 +72,7 @@ include_directories("dependencies/others/include")
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # Put all libraries into a variable
-set(LIBS OpenGL GLAD glfw imgui)
+set(LIBS GLAD glfw imgui)
 
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})

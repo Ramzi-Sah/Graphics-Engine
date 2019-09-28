@@ -192,6 +192,16 @@ void Model::setRotation(float rotationDeg, glm::vec3 axes) {
     // recalculate model matrix
     m_model = m_positionMat * m_rotationMat * m_scaleMat;
 };
+void Model::addRotation(float rotationDeg, glm::vec3 axes) {
+    // reset rotation mat
+    // m_rotationMat = glm::mat4(1.0f);
+
+    // set rotaion
+    m_rotationMat = glm::rotate(m_rotationMat, glm::radians(rotationDeg), glm::normalize(axes));
+
+    // recalculate model matrix
+    m_model = m_positionMat * m_rotationMat * m_scaleMat;
+};
 
 void Model::setLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up) {
     // set rotaion

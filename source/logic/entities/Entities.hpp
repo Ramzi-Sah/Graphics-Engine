@@ -24,7 +24,11 @@ public:
 
     // handle
     static void keyEventInput(int key, int action);
-    static void MouseEventInput(bool mouseDisabled, double xpos, double ypos);
+    static void MouseEventInput(bool mouseEnabled, int xpos, int ypos);
+    static void MouseClickEventInput(bool mouseEnabled, int button, int action, int mouseXPos, int mouseYPos);
+
+    // GUI
+    static glm::vec3 GUIget_playerPos();
 };
 
 #endif

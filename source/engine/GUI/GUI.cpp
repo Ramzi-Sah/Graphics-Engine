@@ -33,19 +33,22 @@ void GUI::update(float deltaTime) {
     static bool show_params_window = false;
     static bool show_test_window = false;
 
-    // simple ui
+    // Parameters ui
     {
         ImGui::SetNextWindowPos(ImVec2(20, 20)); //set pos
-        ImGui::SetNextWindowSize(ImVec2(340, 145)); // set size
+        ImGui::SetNextWindowSize(ImVec2(340, 105)); // set size
 
-        ImGui::Begin("Simple UI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("Debug UI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
         ImGui::Text("Enable/disable menus.");
-        ImGui::Checkbox("Parametes", &show_params_window);
-        ImGui::Checkbox("Test Window", &show_test_window);
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+        ImGui::Checkbox("Parameters", &show_params_window);
+        // ImGui::Checkbox("Test Window", &show_test_window);
+        // ImGui::Checkbox("GUI Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", deltaTime * 1000, 1/deltaTime);
+
+        glm::vec3 playerPos = Entities::GUIget_playerPos();
+        ImGui::Text("Player Pos X: %.1f | Y: %.1f | Z: %.1f", playerPos.x, playerPos.y, playerPos.z);
         ImGui::End();
     }
 
@@ -63,12 +66,17 @@ void GUI::update(float deltaTime) {
 
         // params window
         if (show_params_window) {
-            ImGui::SetNextWindowPos(ImVec2(20,180)); //set pos
+            ImGui::SetNextWindowPos(ImVec2(20,130)); //set pos
             ImGui::SetNextWindowSize(ImVec2(350,150)); // set size
 
             ImGui::Begin("Parameters", &show_params_window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
 
             ImGui::ColorEdit3("Clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+            // setCamView
+            static bool camFreeView = false;
+            ImGui::Checkbox("Free camera view", &camFreeView);
+            Camera::handleGUI_freeCam_button(camFreeView);
 
             ImGui::End();
         }
@@ -94,6 +102,18 @@ void GUI::update(float deltaTime) {
 
             if (ImGui::Button("Close Me"))
                 show_test_window = false;
+
+            ImGui::End();
+        }
+
+        // help ui
+        {
+            ImGui::SetNextWindowPos(ImVec2(m_windowSize.x - 300, m_windowSize.y - 75)); //set pos
+
+            ImGui::Begin("Help", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
+
+            ImGui::Text("Change Camera mode \"V\"");
+            ImGui::Text("Spwan a Prop \"B\" / Rotate \"R\" / Place \"left click\"");
 
             ImGui::End();
         }
@@ -123,7 +143,7 @@ void GUI::setTheme() {
     /*------------------------------------ sizes ------------------------------------*/
     style.WindowPadding = ImVec2(10.0f, 10.0f);
     style.FramePadding = ImVec2(10.0f, 5.0f);
-    style.ItemSpacing = ImVec2(10.0f, 4.0f);
+    style.ItemSpacing = ImVec2(10.0f, 5.0f);
     style.ItemInnerSpacing = ImVec2(10.0f, 5.0f);
     style.TouchExtraPadding = ImVec2(0.0f, 0.0f);
     style.IndentSpacing = 20.0f;

@@ -160,6 +160,7 @@ typedef enum
 #endif /*DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2*/
 
 // HACK: Define versionhelpers.h functions manually as MinGW lacks the header
+/*
 #define IsWindowsXPOrGreater()                                 \
     _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(_WIN32_WINNT_WINXP),   \
                                         LOBYTE(_WIN32_WINNT_WINXP), 0)
@@ -175,6 +176,23 @@ typedef enum
 #define IsWindows8Point1OrGreater()                                   \
     _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(_WIN32_WINNT_WINBLUE), \
                                         LOBYTE(_WIN32_WINNT_WINBLUE), 0)
+*/
+// dosent work with old code::blocks mingwin so i manually define it
+#define IsWindowsXPOrGreater()                                 \
+    _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(1),   \
+                                        LOBYTE(1), 0)
+#define IsWindowsVistaOrGreater()                                     \
+    _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(1),   \
+                                        LOBYTE(1), 0)
+#define IsWindows7OrGreater()                                         \
+    _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(1),    \
+                                        LOBYTE(1), 0)
+#define IsWindows8OrGreater()                                         \
+    _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(1),    \
+                                        LOBYTE(1), 0)
+#define IsWindows8Point1OrGreater()                                   \
+    _glfwIsWindowsVersionOrGreaterWin32(HIBYTE(1), \
+                                        LOBYTE(1), 0)
 
 #define _glfwIsWindows10AnniversaryUpdateOrGreaterWin32() \
     _glfwIsWindows10BuildOrGreaterWin32(14393)
