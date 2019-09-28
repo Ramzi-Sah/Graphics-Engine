@@ -25,7 +25,7 @@
 * much more ...
 
 ### FIX ME
-* gpu memory leak on terrain model update
+* gpu memory leak on terrain chunks update
 * nothing else is broken :)
 
 ## Disclaimer :
